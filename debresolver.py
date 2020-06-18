@@ -3,8 +3,10 @@ import os, sys
 def main(deb):
     print("DebResolver by Stunx")
     print("¡Descarga un paquete deb con todas sus dependencias en la carpeta actual para instalar sin internet!")
-    print("Créditos a: Ubunlog.com por un artículo de donde saqué la idea")
-    cmd = "for i in $(apt-cache depends <package> | grep -E 'Depends|Recommends|Suggests' | cut -d ':' -f 2,3 | sed -e s/''/''/); do sudo apt-get download $i 2>>errors.txt; done"
+    cmd = """PACKAGES=<package>
+apt-get download $(apt-cache depends --recurse --no-recommends --no-suggests \
+   --no-conflicts --no-breaks --no-replaces --no-enhances \
+   --no-pre-depends ${PACKAGES} | grep "^\w")"""
     if deb != "noarg":
         os.system(cmd.replace("<package>", deb[0]))
         #print(cmd.replace("<package>", deb[0]))
